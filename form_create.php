@@ -10,13 +10,17 @@
     $errorMessage ="";
     $succesMessage ="";
 
+    $succes = false;
+    $echec = ""; // message d'erreur à initialiser avec le second param renvoyé par la fonction add
+
     if ($_SERVER['REQUEST_METHOD']=='POST')
     {
+/*         echo "<pre>";
+        var_dump($_POST);
+        echo "</pre>"; */
 
         $nom            =$_POST["nom"];
         $adresse        =$_POST["adresse"];
-
-        echo $_POST['valider'];
 
         do {
             if(empty($nom)|| empty($adresse))
@@ -25,7 +29,7 @@
                 break;
             }
 
-            // ajouter le favori dans la base
+            // ajouter le favori dans la table
             $query = "";
             $query = 
                 'INSERT INTO favori (nom, etiquette, descript, adresse_url, id_cat, id_ss_cat, id_type)
@@ -34,21 +38,33 @@
             // nouvelle connexion
             require_once("script/connect.php");
             $db = connection('localhost', 'favoris', 'root','');
-            // requête INSERT 
-            require("script/add.php");
-            add($query, $db);            
 
+            // requête INSERT 
+            require("script/add.php");            
+            $retrunFunctionAdd = add($query, $db); 
+            /* var_dump($retrunFunctionAdd ); */
+
+            $succes = $retrunFunctionAdd[0];
+            $echec = $retrunFunctionAdd[1] ;
+
+            if ($succes) {
+                $succesMessage = "Favori ajouté";
+            }
+
+            if (!empty($echec)){
+                $errorMessage = $echec;
+            }
+
+            // réinitialisation des variables
             $nom="";
             $adresse="";
 
-            $succesMessage = "Favori ajouté";
+           
             header("location: /brief5/index.php");
+            exit;
         } 
         while (false);
     }
-
-    
-
 ?>
 
 <!DOCTYPE html>
@@ -63,12 +79,14 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.2/font/bootstrap-icons.css">
     <link rel="stylesheet" type="text/css" href="style/style.css">
 
-    <script src="script/select_cascade.js"></script>
+    <!-- Appel du script pour les listes déroulantes en cascade catégorie/sous catégorie -->
+    <!-- <script src="script/select_cascade.js"></script> A mettre en bas ou mettre DEFER--> 
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
 </head>
 <body>
     <div class="container my-5">
+
         <h2>Nouveau favori</h2>
 
         <?php 
@@ -83,34 +101,35 @@
         }
         ?>
 
-        <!-- Lancement des réquêtes pour la liste des catagéories, sous catégories et types de favoris -->
+        <!-- --------------- Lancement des réquêtes pour la liste des catagéories, sous catégories et types de favoris -->
         <?php
         // Nouvelle connexion à la bdd
         require_once("script/connect.php");
         $db = connection('localhost', 'favoris', 'root','');
 
-        // création de la requête catgéorie
+        // création de la liste des catgéories dans le select du form
         $query = "";
         $query.= "SELECT * FROM categorie;";
         require("script/get.php");
         $categories = get($query, $db);  
 
         // création de la requête sous catgéorie
-        //---- Faite au moment de la selection de la catégorie
+        //---- >Faite au moment de la selection de la catégorie
 
-        // création de la requête sous catgéorie
+        // création de la liste des types de favori dans le select du form
         $query = "";
         $query.= "SELECT * FROM type_favori";
         /* require("script/get.php"); déjà demandé pour les catégories*/
         $type_favoris = get($query, $db);  
-
-
         ?>
 
+
+        <!-- --------------- Le formulaire d'Ajout -->
         <form method="post">
-            <!-- Champ alimenté par une fonction js pour connaitre l'id de la catégorie et pouvoir ainsi filtrer les sous catégorie -->
-            <input type="hidden" id="id_cat_selected"><!-- Mis à jour avec JS -->            
-            <!-- Traitement en php pour connaitre la catégorie sélectionnée pour filtrer correctement les sous catégories -->
+            <!-- OLD Champ alimenté par une fonction js pour connaitre l'id de la catégorie et pouvoir ainsi filtrer les sous catégorie -->
+            <!-- <input type="hidden" id="id_cat_selected"> --><!-- Mis à jour avec JS -->            
+            
+            <!-- Finalement traitement en JS (script js en bas) AJAX avec XMLHttpRequest pour connaitre la catégorie sélectionnée pour filtrer correctement les sous catégories -->
             
             <!-- Les éléments de mon formulaire pour créer un favori -->
             <div class="row mb-3">
@@ -142,67 +161,48 @@
             </div>
 
             <div class="row mb-3">
+                <label class="col-sm-3 col-form-label">Nature du favori</label>
+                <div class="col-sm-6">
+                    <select name="type_favori">
+                        <option value=0>Sélectionner un type</option>
+                        <?php
+                        // On affiche chaque catégorie une à une
+                        foreach ($type_favoris as $type_favori) { 
+                        ?>
+                        <option value=" <?php echo $type_favori['id_type']?>">
+                                <?php echo $type_favori['type_favori']?>
+                        </option>
+                        <?php
+                        }
+                        ?>
+                    </select>
+                </div>
+            </div>
+
+            <div class="row mb-3">
                 <label class="col-sm-3 col-form-label">Categorie</label>
                 <div class="col-sm-6">
-                    <select name="categorie" >
-                        <option value=0></option>
+                    <select name="categorie" id="form_id_cat" class="linked-select" data-target="form_id_ss_cat" data-source = "script/list_ss_cat.php?type=ss_categorie&filter=$id">
+                        <option value=0>Sélectionner une catégorie</option>
                         <?php
                         // On affiche chaque catégorie une à une dans la liste déroulante (option)
                         foreach ($categories as $categorie) {
-                        echo "<option onclick=\"getCatSelected(".$categorie['id_cat'].")\" value=\"".$categorie['id_cat']."\"";
-/*                         if ($categorie['departement_region']==$regionSelected){
+                        echo "<option value=\"".$categorie['id_cat']."\"";
+/*                         if ($categorie['']==$){
                             echo " selected";
                         } */
                         echo ">".$categorie['categorie']."</option>";
                         }
                         ?>
                     </select>
-                    <?php 
-                        // création de la requête sous catgéorie
-                        $query = "";
-/*                         $query.= "  SELECT t3.ss_categorie
-                                    FROM categorie_ss_categorie AS t1
-                                    JOIN categorie AS t2
-                                    ON t1.id_cat = t2.id_cat
-                                    JOIN ss_categorie AS t3
-                                    ON t1.id_ss_cat = t3.id_ss_cat
-                                    WHERE t1.id_cat = ".$categorieSelected; */
-                        /* require("get.php"); */
-                        $query .= "SELECT * FROM ss_categorie";
-                        $ss_categories = get($query, $db);
-                    ?>
-
-
-
                 </div>
             </div>
 
             <div class="row mb-3">
                 <label class="col-sm-3 col-form-label">Sous catgéorie</label>
                 <div class="col-sm-6">
-                    <select name="ss_categorie">
-                        <option value=0></option>
-                        <?php
-                        // On affiche chaque catégorie une à une
-                        foreach ($ss_categories as $ss_categorie) {
-                        echo "<option value=\"".$ss_categorie['id_ss_cat']."\">".$ss_categorie['ss_categorie']."</option>";
-                        }
-                        ?>
-                    </select>
-                </div>
-            </div>
-
-            <div class="row mb-3">
-                <label class="col-sm-3 col-form-label">Nature du favori</label>
-                <div class="col-sm-6">
-                    <select name="type_favori">
-                        <option value=0></option>
-                        <?php
-                        // On affiche chaque catégorie une à une
-                        foreach ($type_favoris as $type_favori) {
-                        echo "<option value=\"".$type_favori['id_type']."\">".$type_favori['type_favori']."</option>";
-                        }
-                        ?>
+                    <select name="ss_categorie" id="form_id_ss_cat" style = "display:none">  <!-- class="linked-select" -->
+                        <option value=0>Sélectionner une sous catégorie</option>
                     </select>
                 </div>
             </div>
@@ -232,8 +232,8 @@
             </div>
 
         </form>
-
-    </div>
+    </div>  
     
+    <script src="script/select_cascade.js"></script>
 </body>
 </html>

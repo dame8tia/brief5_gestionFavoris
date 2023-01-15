@@ -23,26 +23,12 @@
     <?php
         require("script/connect.php") ;   
         $db = connection('localhost', 'favoris', 'root','');     
-
-        
-        /* var_dump($_SERVER); */
-        /* print_r(array_keys($_SERVER)); */
-
-/*         foreach ($_SERVER as $k=>$v)
-        echo $k . "=>" . $v . "<br>"; */
-
-        // lecture d'une superglobale
-/*         foreach($_SERVER as $field => $value){
-            echo '<b>'.$field.'</b> : '.$value.'<br />';
-        }
-        echo '<br /><br />'; */
-
     ?>
 
     <?php
 
         if (isset($db)){
-            // affiche les favoris
+            // affiche les favoris : LEFT JOIN pour les favoris sans catégories
             $selectFavoris = 
             'SELECT t1.id, t1.nom, t1.etiquette, t1.descript, t1.adresse_url, t2.categorie, t3.ss_categorie, t4.type_favori
             FROM favori AS t1
@@ -55,13 +41,15 @@
 
             require("script/get.php");
             $favoris = get($selectFavoris, $db);
+
+            
         }
         else { echo "Pas de connexion à la base de données";}
         
     ?>
 
     <div class="container">
-
+        <!-- Bouton Ajouter un favori : Lance un formulaire php : form_create.php -->
         <a class="btn btn-primary" href="form_create.php" role="button">Ajouter un favori</a>
         
         <table class="table table-responsive table-striped overflow-auto table-hover table-bordered border-primary-subtle mt-5">
@@ -93,7 +81,9 @@
                     <td><?php echo $favori['ss_categorie']?></td>
                     <td><?php echo $favori['type_favori']?></td>
                     <td>
+                        <!-- Création des deux icones, dans une balise HTML <a> -->
                         <a href="form_edit.php?id=<?php echo $favori['id']?>" class="edit" title="Edit"><i class="bi bi-pencil-square"></i></a>
+                        <!-- Bouton delete : En JS function (id_à_su^pirmer) ouverture d'un message de confirmation ; si oui lancement du script delete.php -->
                         <a href="#" class="delete" title="Delete" onclick ="confirmDelete(<?php echo $favori['id']?>)"><i class="bi bi-trash3-fill"></i></a>
                     </td>
                 </tr>

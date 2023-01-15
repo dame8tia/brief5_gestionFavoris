@@ -1,6 +1,11 @@
 <?php
-     function add(string $query, object $db) {
+     function update(string $query, object $db) {
         $db = $db ;
+
+        echo "<pres>";
+        var_dump($_POST);
+        echo "</pres>";
+
 
         // traitement particulier pour ces 3 variables qui sont injectées dans la req SQL comme les valeurs de clés étrangères
         // traitement du cas de la valeur Null 
@@ -36,19 +41,20 @@
         $etiquette      =$_POST["etiquette"];
         $description    =$_POST["description"];
         $adresse        =$_POST["adresse"];
+        $id             =intval($_POST["id"]);
 
         // Exécution de la requête
         $query = $db->prepare($query);
-        $query->bindValue('nom', $nom, PDO::PARAM_STR);
-        $query->bindValue('etiquette', $etiquette, PDO::PARAM_STR);
-        $query->bindValue('descript', $description, PDO::PARAM_STR);
-        $query->bindValue('adresse', $adresse, PDO::PARAM_STR);
-        $query->bindValue('id_cat', $id_cat, PDO::PARAM_INT);
-        $query->bindValue('id_ss_cat', $id_ss_cat, PDO::PARAM_INT);
-        $query->bindValue('id_type', $id_type_fav, PDO::PARAM_INT);
+        $query->bindValue(':id', $id, PDO::PARAM_INT);
+        $query->bindValue(':nom', $nom, PDO::PARAM_STR);
+        $query->bindValue(':etiquette', $etiquette, PDO::PARAM_STR);
+        $query->bindValue(':descript', $description, PDO::PARAM_STR);
+        $query->bindValue(':adresse', $adresse, PDO::PARAM_STR);
+        $query->bindValue(':id_cat', $id_cat, PDO::PARAM_INT);
+        $query->bindValue(':id_ss_cat', $id_ss_cat, PDO::PARAM_INT);
+        $query->bindValue(':id_type', $id_type_fav, PDO::PARAM_INT);
         /* $resultat_exec = $query->execute(['nom' => $nom, 'etiquette'=>$etiquette, 'descript'=>$description
                                         , 'adresse'=>$adresse, 'id_cat'=> $id_cat, 'id_ss_cat'=> $id_ss_cat, 'id_type'=>$id_type_fav]); */
-        
         $resultat_exec = $query->execute();
 
         $errorMessageQuery = "";   

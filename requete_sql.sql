@@ -183,5 +183,20 @@ RIGHT OUTER JOIN categorie AS t1
 ON t1.id_cat = t3.id_cat
 LEFT OUTER JOIN ss_categorie AS t2
 ON t2.id_ss_cat = t3.id_ss_cat ;
+
+<?php 
+// création de la requête sous catgéorie
+$query = "";
+/*                         $query.= "  SELECT t3.ss_categorie
+            FROM categorie_ss_categorie AS t1
+            JOIN categorie AS t2
+            ON t1.id_cat = t2.id_cat
+            JOIN ss_categorie AS t3
+            ON t1.id_ss_cat = t3.id_ss_cat
+            WHERE t1.id_cat = ".$categorieSelected; */
+/* require("get.php"); */
+$query .= "SELECT * FROM ss_categorie";
+$ss_categories = get($query, $db);
+?>
    
 

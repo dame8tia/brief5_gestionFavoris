@@ -1,5 +1,5 @@
 <?php 
-/* ------------- > Lire un tableau : */
+/* ------------- > Lire un tableau plus clairement : */
 
 /*         echo "<pre>";
         var_dump($_SERVER);
@@ -17,5 +17,9 @@
         echo '<br /><br />'; */
 
 /* ------------- > Remttre à jour l'autoincrement : */
+//ALTER TABLE categorie AUTO_INCREMENT = 7 ;
+// $lastId = $db->lastInsertId();   
 
-//ALTER TABLE categorie AUTO_INCREMENT = 7 ;   
+
+/* ------------- > Version php : */
+/* <?php echo "version php .phpversion()".phpversion();?> */

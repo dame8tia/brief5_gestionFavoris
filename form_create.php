@@ -13,9 +13,10 @@
     $succes = false;
     $echec = ""; // message d'erreur à initialiser avec le second param renvoyé par la fonction add
 
+    // traite les données poster suite à l'envoi du formulaire
     if ($_SERVER['REQUEST_METHOD']=='POST')
     {
-/*         echo "<pre>";
+        /*echo "<pre>";
         var_dump($_POST);
         echo "</pre>"; */
 
@@ -135,28 +136,28 @@
             <div class="row mb-3">
                 <label class="col-sm-3 col-form-label">Nom</label>
                 <div class="col-sm-6">
-                    <input type="text" class="form-control" name="nom" value="<?php echo $nom;?>">
+                    <input type="text" class="form-control" name="nom" value="<?= $nom;?>">
                 </div>
             </div>
 
             <div class="row mb-3">
                 <label class="col-sm-3 col-form-label">Description</label>
                 <div class="col-sm-6">
-                    <input type="text" class="form-control" name="description" value="<?php echo $description;?>">
+                    <input type="text" class="form-control" name="description" value="<?= $description;?>">
                 </div>
             </div>
 
             <div class="row mb-3">
                 <label class="col-sm-3 col-form-label">Etiquette</label>
                 <div class="col-sm-6">
-                    <input type="text" class="form-control" name="etiquette" value="<?php echo $etiquette;?>">
+                    <input type="text" class="form-control" name="etiquette" value="<?= $etiquette;?>">
                 </div>
             </div>
 
             <div class="row mb-3">
                 <label class="col-sm-3 col-form-label">Adresse</label>
                 <div class="col-sm-6">
-                    <input type="url" class="form-control" name="adresse" value="<?php echo $adresse;?>">
+                    <input type="url" class="form-control" name="adresse" value="<?= $adresse;?>">
                 </div>
             </div>
 
@@ -169,8 +170,8 @@
                         // On affiche chaque catégorie une à une
                         foreach ($type_favoris as $type_favori) { 
                         ?>
-                        <option value=" <?php echo $type_favori['id_type']?>">
-                                <?php echo $type_favori['type_favori']?>
+                        <option value=" <?= $type_favori['id_type']?>">
+                                <?= $type_favori['type_favori']?>
                         </option>
                         <?php
                         }
@@ -188,7 +189,7 @@
                         // On affiche chaque catégorie une à une dans la liste déroulante (option)
                         foreach ($categories as $categorie) {
                         echo "<option value=\"".$categorie['id_cat']."\"";
-/*                         if ($categorie['']==$){
+                        /* if ($categorie['']==$){
                             echo " selected";
                         } */
                         echo ">".$categorie['categorie']."</option>";
@@ -234,6 +235,6 @@
         </form>
     </div>  
     
-    <script src="script/select_cascade.js"></script>
+    <script src="script_js/select_cascade.js"></script>
 </body>
 </html>

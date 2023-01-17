@@ -1,5 +1,13 @@
 <?php
-    /* $doc = new DomDocument;
+    /*tutoriel suivi : Graphikart https://www.youtube.com/watch?v=8T4zOV8iHD0*/
+
+    /* Permet de préparer et éxécuter les requêtes pour les listes déroulantes. 
+    La seconde dépendant de la première
+    Apparait dans un attribut spécifique data-source (HTML5) de l'élément HTML select.
+    data-source = "script/list_ss_cat.php?type=ss_categorie&filter=$id" du select de la catégorie
+    $id étant l'id de la catégorie */
+
+    /* $doc = new DomDocument; // ici j'ai essayé de récupérer les objet du DOM en php ; je n'ai pas plus creusé cette piste
     $id_cat_selected = $doc->getElementById('id_cat_selected');
     echo(" id_cat_selected : ".$id_cat_selected) ; */
 
@@ -19,11 +27,10 @@
             $query->execute(['id' => $id_cat]);
             $ss_cats_filtered = $query->fetchAll();
 
-/*             print_r($ss_cats_filtered); 
+            /*print_r($ss_cats_filtered); 
             echo '<pre>' ;
             print_r($ss_cats_filtered);
             echo '</pre>' ; */
-
             
             /* echo '<pre>' ; */            
             // création d'un tableau des résultats méthode array_map
@@ -40,14 +47,8 @@
                 }, $ss_cats_filtered)
             /* ); // fermeture du var_dump()*/
             );
-            /* echo '<\pre>' ; */            
-
+            /* echo '<\pre>' ; */     
         }
         
     }
     else {throw new Exception("Type inconnu : ".$_GET['type']) ; }
-
-
-
-
-?>

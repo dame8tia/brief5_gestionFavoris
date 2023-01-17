@@ -55,10 +55,6 @@
 
             }
             else { echo "Pas de connexion à la base de données";}
-
-
-
-
         }
 
         else {header("location: /brief5/index.php");}
@@ -79,8 +75,8 @@
 
         $result = update($query, $db);
 
-        echo 'retourExec :'.$result[0].'\n';
-        echo 'is_bool(retourExec) :'.is_bool($result[0]);
+/*         echo 'retourExec :'.$result[0].'\n';
+        echo 'is_bool(retourExec) :'.is_bool($result[0]); */
 
         do {
             if(!$result[0])
@@ -91,8 +87,8 @@
             };
 
             $succesMessage = "Favori modifié";
-/*             header("location: /brief5/index.php");
-            exit; */
+            header("location: /brief5/index.php");
+            exit;
         } 
         while (false);
         /* echo '$succesMessage:'.$succesMessage; */
@@ -169,32 +165,32 @@
         <form method="post">
 
             <!-- Traitement en AJAX pour connaitre la catégorie sélectionnée pour filtrer correctement les sous catégories -->
-            <input type="hidden" name="id" value ="<?php echo $id_fav_selected;?>">
+            <input type="hidden" name="id" value ="<?= $id_fav_selected;?>">
             <div class="row mb-3">
                 <label class="col-sm-3 col-form-label">Nom</label>
                 <div class="col-sm-6">
-                    <input type="text" class="form-control" name="nom" value="<?php echo $nom;?>">
+                    <input type="text" class="form-control" name="nom" value="<?= $nom;?>">
                 </div>
             </div>
 
             <div class="row mb-3">
                 <label class="col-sm-3 col-form-label">Description</label>
                 <div class="col-sm-6">
-                    <input type="text" class="form-control" name="description" value="<?php echo $description;?>">
+                    <input type="text" class="form-control" name="description" value="<?= $description;?>">
                 </div>
             </div>
 
             <div class="row mb-3">
                 <label class="col-sm-3 col-form-label">Etiquette</label>
                 <div class="col-sm-6">
-                    <input type="text" class="form-control" name="etiquette" value="<?php echo $etiquette;?>">
+                    <input type="text" class="form-control" name="etiquette" value="<?= $etiquette;?>">
                 </div>
             </div>
 
             <div class="row mb-3">
                 <label class="col-sm-3 col-form-label">Adresse</label>
                 <div class="col-sm-6">
-                    <input type="url" class="form-control" name="adresse" value="<?php echo $adresse;?>">
+                    <input type="url" class="form-control" name="adresse" value="<?= $adresse;?>">
                 </div>
             </div>
 
@@ -285,7 +281,7 @@
         </form>
 
     </div>
-    <script src="script/select_cascade.js"></script>
+    <script src="script_js/select_cascade.js"></script>
     
 </body>
 </html>

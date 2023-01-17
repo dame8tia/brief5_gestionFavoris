@@ -2,9 +2,9 @@
      function update(string $query, object $db) {
         $db = $db ;
 
-        echo "<pres>";
+/*         echo "<pres>";
         var_dump($_POST);
-        echo "</pres>";
+        echo "</pres>"; */
 
 
         // traitement particulier pour ces 3 variables qui sont injectées dans la req SQL comme les valeurs de clés étrangères

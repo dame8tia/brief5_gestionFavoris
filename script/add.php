@@ -59,4 +59,3 @@
 
         return array($resultat_exec, $errorMessageQuery) ;
     }
-?>

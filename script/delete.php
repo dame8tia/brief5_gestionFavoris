@@ -12,4 +12,3 @@ if(isset($_GET["id"])){
 
 header("location: /brief5/index.php");
 exit;
-?>

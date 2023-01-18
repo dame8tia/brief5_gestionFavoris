@@ -1,5 +1,24 @@
 @import url('https://fonts.googleapis.com/css2?family=Nova+Square&display=swap');
 
 td{
-    border:rgb(0, 255, 30) solid 10px
+    border:rgb(0, 255, 30) solid 10px;
 }
+
+
+/* Pour les 4 paramétrages ci dessous le CSS ne fonctionne pas */ 
+.edit{
+    color : orange;
+}
+
+.delete{
+    color : red;
+}
+
+input:invalid {
+    border: 2px dashed red;
+  }
+  
+  input:valid {
+    border: 1px solid black;
+  }
+  

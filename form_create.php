@@ -37,11 +37,11 @@
                 VALUES (:nom, :etiquette, :descript, :adresse, :id_cat, :id_ss_cat, :id_type)';
             
             // nouvelle connexion
-            require_once("script/connect.php");
+            require_once("source/connect.php");
             $db = connection('localhost', 'favoris', 'root','');
 
             // requête INSERT 
-            require("script/add.php");            
+            require("source/add.php");            
             $retrunFunctionAdd = add($query, $db); 
             /* var_dump($retrunFunctionAdd ); */
 
@@ -81,7 +81,7 @@
     <link rel="stylesheet" type="text/css" href="style/style.css">
 
     <!-- Appel du script pour les listes déroulantes en cascade catégorie/sous catégorie -->
-    <!-- <script src="script/select_cascade.js"></script> A mettre en bas ou mettre DEFER--> 
+    <!-- <script src="source/select_cascade.js"></script> A mettre en bas ou mettre DEFER--> 
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
 </head>
@@ -105,13 +105,13 @@
         <!-- --------------- Lancement des réquêtes pour la liste des catagéories, sous catégories et types de favoris -->
         <?php
         // Nouvelle connexion à la bdd
-        require_once("script/connect.php");
+        require_once("source/connect.php");
         $db = connection('localhost', 'favoris', 'root','');
 
         // création de la liste des catgéories dans le select du form
         $query = "";
         $query.= "SELECT * FROM categorie;";
-        require("script/get.php");
+        require("source/get.php");
         $categories = get($query, $db);  
 
         // création de la requête sous catgéorie
@@ -120,7 +120,7 @@
         // création de la liste des types de favori dans le select du form
         $query = "";
         $query.= "SELECT * FROM type_favori";
-        /* require("script/get.php"); déjà demandé pour les catégories*/
+        /* require("source/get.php"); déjà demandé pour les catégories*/
         $type_favoris = get($query, $db);  
         ?>
 
@@ -136,7 +136,7 @@
             <div class="row mb-3">
                 <label class="col-sm-3 col-form-label">Nom</label>
                 <div class="col-sm-6">
-                    <input type="text" class="form-control" name="nom" value="<?= $nom;?>">
+                    <input type="text" class="form-control" name="nom" value="<?= $nom;?>" required>
                 </div>
             </div>
 
@@ -157,7 +157,7 @@
             <div class="row mb-3">
                 <label class="col-sm-3 col-form-label">Adresse</label>
                 <div class="col-sm-6">
-                    <input type="url" class="form-control" name="adresse" value="<?= $adresse;?>">
+                    <input type="url" class="form-control" name="adresse" value="<?= $adresse;?>" required>
                 </div>
             </div>
 
@@ -183,7 +183,7 @@
             <div class="row mb-3">
                 <label class="col-sm-3 col-form-label">Categorie</label>
                 <div class="col-sm-6">
-                    <select name="categorie" id="form_id_cat" class="linked-select" data-target="form_id_ss_cat" data-source = "script/list_ss_cat.php?type=ss_categorie&filter=$id">
+                    <select name="categorie" id="form_id_cat" class="linked-select" data-target="form_id_ss_cat" data-source = "source/list_ss_cat.php?type=ss_categorie&filter=$id">
                         <option value=0>Sélectionner une catégorie</option>
                         <?php
                         // On affiche chaque catégorie une à une dans la liste déroulante (option)

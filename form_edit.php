@@ -169,7 +169,7 @@
             <div class="row mb-3">
                 <label class="col-sm-3 col-form-label">Nom</label>
                 <div class="col-sm-6">
-                    <input type="text" class="form-control" name="nom" value="<?= $nom;?>">
+                    <input type="text" class="form-control" name="nom" value="<?= $nom;?>" required>
                 </div>
             </div>
 
@@ -190,7 +190,7 @@
             <div class="row mb-3">
                 <label class="col-sm-3 col-form-label">Adresse</label>
                 <div class="col-sm-6">
-                    <input type="url" class="form-control" name="adresse" value="<?= $adresse;?>">
+                    <input type="url" class="form-control" name="adresse" value="<?= $adresse;?>" required>
                 </div>
             </div>
 

@@ -68,9 +68,9 @@
                     <td><?= $bookmark['type_favori']?></td>
                     <td>
                         <!-- Création des deux icones, dans une balise HTML <a> -->
-                        <a href="form_edit.php?id=<?= $bookmark['id']?>" class="edit" title="Edit"><i class="bi bi-pencil-square"></i></a>
+                        <a href="form_edit.php?id=<?= $bookmark['id']?>" class="edit" title="Edit"><span><i class="bi bi-pencil-square"></i><span></a>
                         <!-- Bouton delete : En JS function (id_à_su^pirmer) ouverture d'un message de confirmation ; si oui lancement du script delete.php -->
-                        <a href="#" class="delete" title="Delete" onclick ="confirmDelete(<?= $bookmark['id']?>)"><i class="bi bi-trash3-fill"></i></a>
+                        <a href="#" class="delete" title="Delete" onclick ="confirmDelete(<?= $bookmark['id']?>)"><span><i class="bi bi-trash3-fill"></i><span></a>
                     </td>
                 </tr>
                 <?php

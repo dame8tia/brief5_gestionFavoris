@@ -1,6 +1,6 @@
 <?php
     // Charge le fichier connect.php. Puis Lance la fonction connection
-    require("script/connect.php") ;   
+    require("source/connect.php") ;   
     $db = connection('localhost', 'favoris', 'root','');     
     
     // Renvoie la liste des favoris
@@ -14,10 +14,11 @@
         LEFT OUTER JOIN ss_categorie AS t3
         ON t1.id_ss_cat = t3.id_ss_cat 
         LEFT OUTER JOIN type_favori AS t4
-        ON t1.id_type = t4.id_type ;';
+        ON t1.id_type = t4.id_type ;
+        ORDER BY t1.id DESC';
 
         // charge le script
-        require("script/get.php");
+        require("source/get.php");
         // Lance la fonction get qui attend 2 param : la requête et la connexion, le résultat de la requête est récupéré pour l'affichage
         $bookmarks = get($selectBookmarks, $db);            
     }

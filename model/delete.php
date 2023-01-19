@@ -1,4 +1,7 @@
 <?php 
+
+// En faire une fonction
+
 if(isset($_GET["id"])){
     $id = $_GET["id"] ;
     require("connect.php") ;   

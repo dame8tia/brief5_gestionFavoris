@@ -11,47 +11,48 @@
     $id_type="";
 
     $errorMessage ="";
-    $succesMessage ="";
+    $succesMessage ="";   
 
     
     if ($_SERVER["REQUEST_METHOD"]== 'GET'){
-        // méthode GET pour que les champs soient renseignés
+        // méthode GET récupérer l'id du lien à modifier afin de remplir les champs nom, description, ... du favori à modifier
         if (isset($_GET['id']))
         {
             $id_fav_selected = $_GET['id'] ;
-            require("script/connect.php") ;   
+            require("model/connect.php") ;   
             
             $db = connection('localhost', 'favoris', 'root','');  
 
-            if (isset($db)){
-                
-                // affiche le favori à mettre à jour
-                $selectedFavori = 
-                'SELECT t1.id, t1.nom, t1.etiquette, t1.descript
-                , t1.adresse_url, t2.id_cat, t2.categorie, t3.id_ss_cat, t3.ss_categorie, t4.id_type, t4.type_favori
-                FROM favori AS t1
-                LEFT OUTER JOIN categorie AS t2
-                ON t1.id_cat = t2.id_cat
-                LEFT OUTER JOIN ss_categorie AS t3
-                ON t1.id_ss_cat = t3.id_ss_cat 
-                LEFT OUTER JOIN type_favori AS t4
-                ON t1.id_type = t4.id_type 
-                WHERE t1.id ='.$id_fav_selected.';'  ;
+            if (isset($db)){ 
 
-                require("script/get.php");
-                $selectedFavori = get($selectedFavori, $db);
+                // Affiche les informations du favori sélectionné
+                require("model/get.php");
+                $data = get("favori",$db, $id_fav_selected);
 
                 // renvoie une seule ligne 
-                $nom=$selectedFavori[0]["nom"];
-                $etiquette=$selectedFavori[0]["etiquette"];
-                $description=$selectedFavori[0]["descript"];
-                $adresse=$selectedFavori[0]["adresse_url"];
-                $categorie_fav=$selectedFavori[0]["categorie"];
-                $ss_categorie_fav=$selectedFavori[0]["ss_categorie"];
-                $type_favori_fav=$selectedFavori[0]["type_favori"];
-                $id_cat=$selectedFavori[0]["id_cat"];
-                $id_ss_cat=$selectedFavori[0]["id_ss_cat"];
-                $id_type=$selectedFavori[0]["id_type"];           
+                $nom=$data[0]["nom"];
+                $etiquette=$data[0]["etiquette"];
+                $description=$data[0]["descript"];
+                $adresse=$data[0]["adresse_url"];
+                $categorie_fav=$data[0]["categorie"];
+                $ss_categorie_fav=$data[0]["ss_categorie"];
+                $type_favori_fav=$data[0]["type_favori"];
+                $id_cat=$data[0]["id_cat"];
+                $id_ss_cat=$data[0]["id_ss_cat"];
+                $id_type=$data[0]["id_type"];        
+                
+                
+                // création de la liste des catgéories dans le select du form
+                $list_categorie = get("categorie", $db); 
+                
+                // création de la liste des types de favori dans le select du form
+                $list_type = get("type_favori", $db); 
+
+                // création de la liste filtrées des ss catégorie, si une catégorie est sélectionnée
+                if (isset($categorie_fav)) {
+                    $list_ss_cat_filtered = get_join("categorie_ss_categorie", $db, $categorie_fav);
+                }
+                
 
             }
             else { echo "Pas de connexion à la base de données";}
@@ -61,7 +62,7 @@
     }
     else {
     //Method POST pour l'update
-        require ('script/update.php');
+        require ('model/update.php');
         $query='';
         $query.= "UPDATE favori SET nom= :nom, etiquette= :etiquette, ";    
         $query.= 'descript= :descript, adresse_url= :adresse,id_cat= :id_cat, ';
@@ -69,7 +70,7 @@
         $query.= 'WHERE id= :id';
 
         if (!function_exists('connection')) {
-            require("script/connect.php") ;             
+            require("model/connect.php") ;             
             $db = connection('localhost', 'favoris', 'root','');  
         }
 
@@ -126,42 +127,6 @@
         }
         ?>
 
-        <?php
-            if (!function_exists('connection')) {
-                require("script/connect.php") ;             
-                $db = connection('localhost', 'favoris', 'root','');  
-            }
-
-            // création de la liste des catgéories dans le select du form
-            $query = "";
-            $query.= "SELECT * FROM categorie;";
-            if (!function_exists('get')) {
-                require("script/get.php");
-            }
-            $list_categorie = get($query, $db); 
-            
-            // création de la liste des types de favori dans le select du form
-            $query = "";
-            $query.= "SELECT * FROM type_favori";
-            if (!function_exists('get')) {
-                require("script/get.php");
-            }
-            $list_type = get($query, $db); 
-
-            // création de la liste des ss catégorie
-            $query = "";
-            $query.= "SELECT t2.id_ss_cat, t2.ss_categorie 
-                    FROM categorie_ss_categorie AS t1 
-                    JOIN ss_categorie AS t2 ON t1.id_ss_cat = t2.id_ss_cat
-                    JOIN categorie AS t3 ON t3.id_cat = t1.id_cat
-                    WHERE t3.categorie = \"$categorie_fav\"";
-            /* require("script/get.php"); déjà demandé pour les catégories*/
-            $list_ss_cat_filtered = get($query, $db);  ;
-    
-        ?>
-
-        
-
         <form method="post">
 
             <!-- Traitement en AJAX pour connaitre la catégorie sélectionnée pour filtrer correctement les sous catégories -->
@@ -216,7 +181,7 @@
             <div class="row mb-3">
                 <label class="col-sm-3 col-form-label">Categorie</label>
                 <div class="col-sm-6">
-                    <select name="categorie" id="form_id_cat" class="linked-select" data-target="form_id_ss_cat" data-source = "script/list_ss_cat.php?type=ss_categorie&filter=$id">
+                    <select name="categorie" id="form_id_cat" class="linked-select" data-target="form_id_ss_cat" data-source = "model/list_ss_cat.php?type=ss_categorie&filter=$id">
                         <option value=0>Sélectionner une catégorie</option>
                         <?php
                         // On affiche chaque catégorie une à une dans la liste déroulante (option)

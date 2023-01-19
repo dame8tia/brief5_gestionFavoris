@@ -13,8 +13,22 @@
     $succes = false;
     $echec = ""; // message d'erreur à initialiser avec le second param renvoyé par la fonction add
 
-    // traite les données poster suite à l'envoi du formulaire
-    if ($_SERVER['REQUEST_METHOD']=='POST')
+
+    // Si != POST, càd à l'ouverture du fichier : installation des listes déroulantes
+    if ($_SERVER['REQUEST_METHOD']!=='POST'){
+
+        // Nouvelle connexion à la bdd
+        require_once("model/connect.php");
+        $db = connection('localhost', 'favoris', 'root','');
+
+        // création de la liste des catgéories dans le select du form
+        require("model/get.php");
+        $categories = get("categorie", $db);  
+
+        // création de la liste des types de favori dans le select du form
+        $type_favoris = get("type_favori", $db);  
+    }
+    else // traite les données poster suite à l'envoi du formulaire
     {
         /*echo "<pre>";
         var_dump($_POST);
@@ -37,11 +51,11 @@
                 VALUES (:nom, :etiquette, :descript, :adresse, :id_cat, :id_ss_cat, :id_type)';
             
             // nouvelle connexion
-            require_once("source/connect.php");
+            require_once("model/connect.php");
             $db = connection('localhost', 'favoris', 'root','');
 
             // requête INSERT 
-            require("source/add.php");            
+            require("model/add.php");            
             $retrunFunctionAdd = add($query, $db); 
             /* var_dump($retrunFunctionAdd ); */
 
@@ -81,7 +95,7 @@
     <link rel="stylesheet" type="text/css" href="style/style.css">
 
     <!-- Appel du script pour les listes déroulantes en cascade catégorie/sous catégorie -->
-    <!-- <script src="source/select_cascade.js"></script> A mettre en bas ou mettre DEFER--> 
+    <!-- <script src="model/select_cascade.js"></script> A mettre en bas ou mettre DEFER--> 
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
 </head>
@@ -101,36 +115,9 @@
             ";
         }
         ?>
-
-        <!-- --------------- Lancement des réquêtes pour la liste des catagéories, sous catégories et types de favoris -->
-        <?php
-        // Nouvelle connexion à la bdd
-        require_once("source/connect.php");
-        $db = connection('localhost', 'favoris', 'root','');
-
-        // création de la liste des catgéories dans le select du form
-        $query = "";
-        $query.= "SELECT * FROM categorie;";
-        require("source/get.php");
-        $categories = get($query, $db);  
-
-        // création de la requête sous catgéorie
-        //---- >Faite au moment de la selection de la catégorie
-
-        // création de la liste des types de favori dans le select du form
-        $query = "";
-        $query.= "SELECT * FROM type_favori";
-        /* require("source/get.php"); déjà demandé pour les catégories*/
-        $type_favoris = get($query, $db);  
-        ?>
-
-
         <!-- --------------- Le formulaire d'Ajout -->
-        <form method="post">
-            <!-- OLD Champ alimenté par une fonction js pour connaitre l'id de la catégorie et pouvoir ainsi filtrer les sous catégorie -->
-            <!-- <input type="hidden" id="id_cat_selected"> --><!-- Mis à jour avec JS -->            
-            
-            <!-- Finalement traitement en JS (script js en bas) AJAX avec XMLHttpRequest pour connaitre la catégorie sélectionnée pour filtrer correctement les sous catégories -->
+        <form method="post">              
+            <!--Traitement des listes liées en JS (script js en bas) AJAX avec XMLHttpRequest pour connaitre la catégorie sélectionnée pour filtrer correctement les sous catégories -->
             
             <!-- Les éléments de mon formulaire pour créer un favori -->
             <div class="row mb-3">
@@ -183,7 +170,7 @@
             <div class="row mb-3">
                 <label class="col-sm-3 col-form-label">Categorie</label>
                 <div class="col-sm-6">
-                    <select name="categorie" id="form_id_cat" class="linked-select" data-target="form_id_ss_cat" data-source = "source/list_ss_cat.php?type=ss_categorie&filter=$id">
+                    <select name="categorie" id="form_id_cat" class="linked-select" data-target="form_id_ss_cat" data-source = "model/list_ss_cat.php?type=ss_categorie&filter=$id">
                         <option value=0>Sélectionner une catégorie</option>
                         <?php
                         // On affiche chaque catégorie une à une dans la liste déroulante (option)
@@ -199,7 +186,8 @@
                 </div>
             </div>
 
-            <div class="row mb-3">
+            <div class="row mb-3"> 
+                <!-- Tant que la catégorie n'est pas connue on ne peut établir la liste des sous catégories  -->
                 <label class="col-sm-3 col-form-label">Sous catgéorie</label>
                 <div class="col-sm-6">
                     <select name="ss_categorie" id="form_id_ss_cat" style = "display:none">  <!-- class="linked-select" -->
@@ -235,6 +223,6 @@
         </form>
     </div>  
     
-    <script src="script_js/select_cascade.js"></script>
+    <script src="script/select_cascade.js"></script>
 </body>
 </html>

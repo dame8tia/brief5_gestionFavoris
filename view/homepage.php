@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -20,20 +19,20 @@
         <!-- Adding dataTable CDN -->
     <script type="text/javascript" src="https://cdn.datatables.net/v/bs5/dt-1.13.1/datatables.min.js"></script>
         <!-- Appel du script JS -->
-    <script src="script_js/datatable_style.js"></script>
+    <script src="script/datatable_style.js"></script>
     <!-- fin -->
 
 
     <link rel="stylesheet" type="text/css" href="style/style.css">
 
-    <script src="script_js/box_confirm_delete.js"></script>
+    <script src="script/box_confirm_delete.js"></script>
 
 
 </head>
 <body>
-    <h1 >Gestion des favoris d'un utilisateur</h1>
 
     <div class="container">
+        <h1 >Gestion des favoris d'un utilisateur</h1>
         
         <!-- Bouton Ajouter un favori : Lance un formulaire php : form_create.php -->
         <a class="btn btn-primary" href="form_create.php" role="button">Ajouter un favori</a>
@@ -56,25 +55,25 @@
             <tbody class="table-group-divider">
                 <?php
                 // On affiche chaque recette une à une
-                foreach ($bookmarks as $bookmark) {
+                foreach ($data as $ligne) {
                 ?>
                 <tr>
-                    <th scope="row" ><?=$bookmark['nom'];?></th>
-                    <td><?= $bookmark['etiquette'];?></td>
-                    <td><?= $bookmark['descript'];?></td>
-                    <td> <a href="<?= $bookmark['adresse_url'];?>" target ="_blank" >  <?= $bookmark['adresse_url'] ?></a></td> <!--  -->
-                    <td><?= $bookmark['categorie']?></td>
-                    <td><?= $bookmark['ss_categorie']?></td>
-                    <td><?= $bookmark['type_favori']?></td>
+                    <th scope="row" ><?=$ligne['nom'];?></th>
+                    <td><?= $ligne['etiquette'];?></td>
+                    <td><?= $ligne['descript'];?></td>
+                    <td> <a href="<?= $ligne['adresse_url'];?>" target ="_blank" >  <?= $ligne['adresse_url'] ?></a></td> <!--  -->
+                    <td><?= $ligne['categorie']?></td>
+                    <td><?= $ligne['ss_categorie']?></td>
+                    <td><?= $ligne['type_favori']?></td>
                     <td>
                         <!-- Création des deux icones, dans une balise HTML <a> -->
-                        <a href="form_edit.php?id=<?= $bookmark['id']?>" class="edit" title="Edit"><span><i class="bi bi-pencil-square"></i><span></a>
+                        <a href="form_edit.php?id=<?= $ligne['id']?>" class="edit" title="Edit"><span><i class="bi bi-pencil-square"></i><span></a>
                         <!-- Bouton delete : En JS function (id_à_su^pirmer) ouverture d'un message de confirmation ; si oui lancement du script delete.php -->
-                        <a href="#" class="delete" title="Delete" onclick ="confirmDelete(<?= $bookmark['id']?>)"><span><i class="bi bi-trash3-fill"></i><span></a>
+                        <a href="#" class="delete" title="Delete" onclick ="confirmDelete(<?= $ligne['id']?>)"><span><i class="bi bi-trash3-fill"></i><span></a>
                     </td>
                 </tr>
                 <?php
-                    }
+                }
                 ?>
             </tbody>       
         </table>

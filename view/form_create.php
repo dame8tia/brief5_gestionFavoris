@@ -18,11 +18,11 @@
     if ($_SERVER['REQUEST_METHOD']!=='POST'){
 
         // Nouvelle connexion à la bdd
-        require_once("model/connect.php");
+        require_once("../model/connect.php");
         $db = connection('localhost', 'favoris', 'root','');
 
         // création de la liste des catgéories dans le select du form
-        require("model/get.php");
+        require("../model/get.php");
         $categories = get("categorie", $db);  
 
         // création de la liste des types de favori dans le select du form
@@ -34,8 +34,8 @@
         var_dump($_POST);
         echo "</pre>"; */
 
-        $nom            =$_POST["nom"];
-        $adresse        =$_POST["adresse"];
+        $nom            = HtmlEntities($_POST["nom"]);
+        $adresse        = HtmlEntities($_POST["adresse"]);
 
         do {
             if(empty($nom)|| empty($adresse))
@@ -43,24 +43,17 @@
                 $errorMessage = "Les champs nom et adresse sont obligatoires";
                 break;
             }
-
-            // ajouter le favori dans la table
-            $query = "";
-            $query = 
-                'INSERT INTO favori (nom, etiquette, descript, adresse_url, id_cat, id_ss_cat, id_type)
-                VALUES (:nom, :etiquette, :descript, :adresse, :id_cat, :id_ss_cat, :id_type)';
             
             // nouvelle connexion
-            require_once("model/connect.php");
+            require("../model/connect.php");
             $db = connection('localhost', 'favoris', 'root','');
 
-            // requête INSERT 
-            require("model/add.php");            
-            $retrunFunctionAdd = add($query, $db); 
-            /* var_dump($retrunFunctionAdd ); */
+            // Lance de la fonction add du script concerné
+            require("../model/add.php");            
+            $returnFunction = add("favori", $db); 
 
-            $succes = $retrunFunctionAdd[0];
-            $echec = $retrunFunctionAdd[1] ;
+            $succes = $returnFunction[0];
+            $echec = $returnFunction[1] ;
 
             if ($succes) {
                 $succesMessage = "Favori ajouté";
@@ -92,7 +85,7 @@
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.2/font/bootstrap-icons.css">
-    <link rel="stylesheet" type="text/css" href="style/style.css">
+    <link rel="stylesheet" type="text/css" href="../style/style.css">
 
     <!-- Appel du script pour les listes déroulantes en cascade catégorie/sous catégorie -->
     <!-- <script src="model/select_cascade.js"></script> A mettre en bas ou mettre DEFER--> 
@@ -170,7 +163,8 @@
             <div class="row mb-3">
                 <label class="col-sm-3 col-form-label">Categorie</label>
                 <div class="col-sm-6">
-                    <select name="categorie" id="form_id_cat" class="linked-select" data-target="form_id_ss_cat" data-source = "model/list_ss_cat.php?type=ss_categorie&filter=$id">
+                    <select name="categorie" id="form_id_cat" class="linked-select" data-target = "form_id_ss_cat" data-source = "../model/list_ss_cat.php?type=ss_categorie&filter=$id">
+
                         <option value=0>Sélectionner une catégorie</option>
                         <?php
                         // On affiche chaque catégorie une à une dans la liste déroulante (option)
@@ -223,6 +217,6 @@
         </form>
     </div>  
     
-    <script src="script/select_cascade.js"></script>
+    <script src="../script/select_cascade.js"></script>
 </body>
 </html>

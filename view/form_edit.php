@@ -12,21 +12,21 @@
 
     $errorMessage ="";
     $succesMessage ="";   
-
     
-    if ($_SERVER["REQUEST_METHOD"]== 'GET'){
+    if ($_SERVER["REQUEST_METHOD"] == 'GET'){
+        
         // méthode GET récupérer l'id du lien à modifier afin de remplir les champs nom, description, ... du favori à modifier
         if (isset($_GET['id']))
         {
-            $id_fav_selected = $_GET['id'] ;
-            require("model/connect.php") ;   
+            $id_fav_selected = HtmlEntities(intVal($_GET['id'])) ;
+            require("../model/connect.php") ;   
             
             $db = connection('localhost', 'favoris', 'root','');  
 
             if (isset($db)){ 
 
                 // Affiche les informations du favori sélectionné
-                require("model/get.php");
+                require("../model/get.php");
                 $data = get("favori",$db, $id_fav_selected);
 
                 // renvoie une seule ligne 
@@ -60,30 +60,25 @@
 
         else {header("location: /brief5/index.php");}
     }
+    
     else {
-    //Method POST pour l'update
-        require ('model/update.php');
-        $query='';
-        $query.= "UPDATE favori SET nom= :nom, etiquette= :etiquette, ";    
-        $query.= 'descript= :descript, adresse_url= :adresse,id_cat= :id_cat, ';
-        $query.= 'id_ss_cat= :id_ss_cat, id_type= :id_type ';
-        $query.= 'WHERE id= :id';
+        //Method POST pour l'update
+            
+        require ('../model/update.php');
 
-        if (!function_exists('connection')) {
-            require("model/connect.php") ;             
+        if (!function_exists('connection')) {  // ce test est déjà fait directement dans connect.php. L'idée est de montrer qu'on peut le faire de n'importe où
+            require("../model/connect.php") ;             
             $db = connection('localhost', 'favoris', 'root','');  
         }
 
-        $result = update($query, $db);
-
-/*         echo 'retourExec :'.$result[0].'\n';
-        echo 'is_bool(retourExec) :'.is_bool($result[0]); */
+        // Appel de la fonction update
+        $result = update("favori", $db);
 
         do {
             if(!$result[0])
             {
                 $errorMessage = "La mise à jour n'a pas été réalisée.";
-                echo '$succesMessage:'.$succesMessage;
+                echo '$errorMessage:'.$errorMessage;
                 break;
             };
 
@@ -92,8 +87,6 @@
             exit;
         } 
         while (false);
-        /* echo '$succesMessage:'.$succesMessage; */
-
     }
 ?>
 
@@ -107,12 +100,15 @@
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.2/font/bootstrap-icons.css">
-    <link rel="stylesheet" type="text/css" href="style/style.css">
+    <link rel="stylesheet" type="text/css" href="../style/style.css">
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
 </head>
+
+
 <body>
     <div class="container my-5">
+
         <h2>Favori à modifier</h2>
 
         <?php 
@@ -181,7 +177,7 @@
             <div class="row mb-3">
                 <label class="col-sm-3 col-form-label">Categorie</label>
                 <div class="col-sm-6">
-                    <select name="categorie" id="form_id_cat" class="linked-select" data-target="form_id_ss_cat" data-source = "model/list_ss_cat.php?type=ss_categorie&filter=$id">
+                    <select name="categorie" id="form_id_cat" class="linked-select" data-target = "form_id_ss_cat" data-source = "../model/list_ss_cat.php?type=ss_categorie&filter=$id">
                         <option value=0>Sélectionner une catégorie</option>
                         <?php
                         // On affiche chaque catégorie une à une dans la liste déroulante (option)
@@ -246,7 +242,7 @@
         </form>
 
     </div>
-    <script src="script_js/select_cascade.js"></script>
+    <script src="../script/select_cascade.js"></script>
     
 </body>
 </html>

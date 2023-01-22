@@ -1,42 +1,30 @@
-// Tuto suivi https://www.youtube.com/watch?v=8T4zOV8iHD0
-
-// Permet de réaliser des listes déroulantes de différents champs entre eux: Pour moi catégorie et sous catégorie
-// Appelée depuis form_create.php et form_edit.php via balise script en bas du fichier
-
-// réalisation d'une classe 
 class LinkedSelect {
+
     constructor ($selectHtml){
-        // un dollar : convention perso pour préciser que c'est un élément du DOM
+        // un dollar : convention perso Grafikart pour préciser que c'est un élément du DOM
         this.$selectHtml = $selectHtml
-
-        /*this.$cible = this.$selectHtml.dataset.target  
-        // les 3 fonctionnenent mais je ne peux pas les appeler dans les fonctions .load 
-        // (pour que çà marche il faut une fonction flechée) et ... DONC dans ces fct, je les attrape avec l'évènement
-        this.$target = document.getElementById(this.$cible)//this.$selectHtml.dataset.target
-        this.$optionDefault = this.$target.firstElementChild */
-
+        this.$target = document.getElementById(this.$selectHtml.dataset.target)
+        this.$optionDefault = this.$target.firstElementChild
+        
         // bind nécessaire avec un évènement dans le constructor
         this.onChange = this.onChange.bind(this)
         this.$selectHtml.addEventListener('change', this.onChange)
-
     }
 
     onChange(e){
 
-        let id_target = e.target.dataset.target // le premier target est un "paramètre" de l'évènement et correspond à l'émetteur de l'évènement
-        let targetHtml = document.getElementById(id_target)
-        let optionDefault = targetHtml.firstElementChild
         let optiontHtml = ""
-
-        console.log(e)
-
         // -- > 1 - on récupère les données en AJAX
         let request = new XMLHttpRequest // pour l'AJAX ou utiliser l"objet fetch
-        // Récupération de l'attribut data-source (qui contient l'url et replace le $id par l'id du sélect sur lequel on fait un changement, true pour l'asynchrone)
-        // on peut utiliser dataset (cf ds le constructor pour la target)
+        // Récupération de l'attribut data-source ("../model/list_ss_cat.php?type=ss_categorie&filter=$id", true pour l'asynchrone)
+        // on peut utiliser dataset.source au lieu getAttribute
+
         request.open('GET', this.$selectHtml.getAttribute('data-source').replace('$id', e.target.value,true))
-        // Chargement 
-        request.onload = function() {
+
+        console.log("cccccccccccccccccc")
+        // Chargement : Fonction fléchée
+        request.onload = () => {
+
             if (request.status >=200 && request.status < 400){
 
                 let data = JSON.parse(request.responseText)
@@ -45,11 +33,10 @@ class LinkedSelect {
                     optiontHtml += '<option value = "'+ option["label"] + '">'+ option ["value"] + '</option>'+"\n"
                 });
 
-                console.log("Option à écrire : "+optiontHtml)
-                targetHtml.innerHTML = optiontHtml
-                targetHtml.insertBefore(optionDefault,targetHtml.firstChild)
-                targetHtml.selectedIndex = 0
-                targetHtml.style.display = null
+                this.$target.innerHTML = optiontHtml
+                this.$target.insertBefore(this.$optionDefault,this.$target.firstChild)
+                this.$target.selectIndex = 0
+                this.$target.style.display = null
             }            
         }  
         // test si erreur
@@ -62,8 +49,10 @@ class LinkedSelect {
 } 
 
 
-let $selects = document.querySelectorAll('.linked-select')// classe donnée à l'attribut select concernée par la dépendance de liste
-/* console.log($selects); */
+
+// Grafikart met des $ pour les variables provenant du dom
+let $selects = document.querySelectorAll('.linked-select')// classe donnée à l'attribut select concerné par la dépendance de liste
+
 $selects.forEach(function($select){
     // Création d'une instance de la classe ci dessus
     new LinkedSelect($select)

@@ -1,7 +1,9 @@
 <?php
 
-    function get(string $table,pdo $db, int $identificateur=null){
-        // préparation de la requête : test de connexion
+    function get(string $table, pdo $db, int $identificateur=null):array {
+        $db =$db ;
+
+        // préparation de la requête si connexion
         if (isset($db)){
             /**
              * ce fichier (get.php) peut être appelé depuis plusieurs fichiers. Je récupère donc le fichier emetteur pour connaitre 
@@ -46,8 +48,9 @@
                     }
                     break;
                     
-    
-                case "form_edit.php" || "form_create" :
+
+
+                case "form_edit.php" || "form_create.php" :
                     switch($table){
                         case "favori" :
                             switch ($withIdentif){
@@ -65,15 +68,33 @@
                                     ON t1.id_ss_cat = t3.id_ss_cat 
                                     LEFT OUTER JOIN type_favori AS t4
                                     ON t1.id_type = t4.id_type
-                                    WHERE t1.id ='.$identificateur.';'  ;
-                                    
+                                    WHERE t1.id ='.$identificateur.';'  ;                                    
                                     break;
                                 default :
                                     echo "WithIdentificateur n'est pas un booleen";
                                     break ;                                
                             }
                             break;
-                            
+                        
+                        case "categorie_ss_categorie" :
+                            switch ($withIdentif){
+                                
+                                case False :
+                                    $query = "SELECT * FROM categorie_ss_categorie ;";
+                                    break ;
+                                case True : // cas depuis le fichier list_ss_cat.php - L'appel de la fct depuis ce fichier .php ne fonctionne pas. En effet, ce script émane d'une fonction JS peut être est-ce çà ???
+                                    $query = "SELECT t2.id_ss_cat, t2.ss_categorie 
+                                            FROM categorie_ss_categorie AS t1 
+                                            JOIN ss_categorie AS t2 
+                                            ON t1.id_ss_cat = t2.id_ss_cat 
+                                            WHERE id_cat = ".$identificateur.";" ;
+                                    break;
+
+                                default :
+                                    echo "TABLE CATEGORIE : identificateur non reconnu comme un bool";
+                                    break ; 
+                            }
+                            break ;  
                         default:  
                             $query =  "SELECT * FROM ".$table.";";
                             break;
@@ -95,7 +116,6 @@
                 echo "Requête vide";
             }
 
-            
             return $data;
 
         } else { echo "Pas de connexion à la base de données";}  
@@ -103,8 +123,9 @@
 
     
     // SELECT AVEC JOINTURE : à affiner plus tard
-    function get_join(string $table,pdo $db, string $identificateur=null){
-        // préparation de la requête : test de connexion
+    function get_join(string $table,pdo $db, string $identificateur=null):array {
+        $db =$db ;
+        // préparation de la requête si connexion
         if (isset($db)){
             /**
              * ce fichier (get.php) peut être appelé depuis plusieurs fichiers. Je récupère donc le fichier emetteur pour connaitre 
@@ -162,7 +183,6 @@
 
 
             // Traitement de la requete
-            $db = $db ;
             $query = $db->prepare($query);
             $query->execute();
             $data = $query->fetchAll();

@@ -1,3 +1,18 @@
+
+<?php 
+/* $root = realpath($_SERVER["DOCUMENT_ROOT"]);
+require("$root/brief5/model/authentification.php");
+
+$connecte = est_connecte();
+
+echo $connecte ;
+if (!$connecte){
+    header("location: /brief5/view/login.php");
+    echo "j'y suis";
+    exit();
+} */
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -5,7 +20,9 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Gestion des favoris</title>
+    <title>
+        <?php echo $title; ?>
+    </title>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.2/font/bootstrap-icons.css">
@@ -22,20 +39,18 @@
     <script src="script/datatable_style.js"></script>
     <!-- fin -->
 
-
     <link rel="stylesheet" type="text/css" href="style/style.css">
-
     <script src="script/box_confirm_delete.js"></script>
-
-
 </head>
+
+
 <body>
 
     <div class="container">
         <h1 >Gestion des favoris d'un utilisateur</h1>
         
         <!-- Bouton Ajouter un favori : Lance un formulaire php : form_create.php -->
-        <a class="btn btn-primary" href="form_create.php" role="button">Ajouter un favori</a>
+        <a class="btn btn-primary" href="view/form_create.php" role="button">Ajouter un favori</a>
         
         <table id="tab_favorite" class="table table-responsive table-striped overflow-auto table-hover table-bordered border-primary-subtle mt-5">
         <caption style="caption-side:bottom">Liste des favoris </caption>
@@ -67,7 +82,7 @@
                     <td><?= $ligne['type_favori']?></td>
                     <td>
                         <!-- Création des deux icones, dans une balise HTML <a> -->
-                        <a href="form_edit.php?id=<?= $ligne['id']?>" class="edit" title="Edit"><span><i class="bi bi-pencil-square"></i><span></a>
+                        <a href="view/form_edit.php?id=<?= $ligne['id']?>" class="edit" title="Edit"><span><i class="bi bi-pencil-square"></i><span></a>
                         <!-- Bouton delete : En JS function (id_à_su^pirmer) ouverture d'un message de confirmation ; si oui lancement du script delete.php -->
                         <a href="#" class="delete" title="Delete" onclick ="confirmDelete(<?= $ligne['id']?>)"><span><i class="bi bi-trash3-fill"></i><span></a>
                     </td>

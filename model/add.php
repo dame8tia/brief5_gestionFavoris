@@ -37,7 +37,7 @@
                                 $id_cat = $_POST["categorie"];
                             }
                             else {
-                                $id_cat=HtmlEntities(intval($_POST["categorie"]));
+                                $id_cat=intval($_POST["categorie"]);
                             };
 
                             if ($_POST["ss_categorie"]=='0')
@@ -46,7 +46,7 @@
                                 $id_ss_cat = $_POST["ss_categorie"];
                             }
                             else {
-                                $id_ss_cat =HtmlEntities(intval($_POST["ss_categorie"]));
+                                $id_ss_cat =intval($_POST["ss_categorie"]);
                             };
 
                             if ($_POST["type_favori"]=='0')
@@ -55,14 +55,14 @@
                                 $id_type_fav = $_POST["type_favori"];
                             }
                             else {
-                                $id_type_fav =HtmlEntities(intval($_POST["type_favori"]));
+                                $id_type_fav = intval($_POST["type_favori"]);
                             };
 
                             // affectation des variables de la superglobale $POST
-                            $nom            = HtmlEntities($_POST["nom"]);
-                            $etiquette      = HtmlEntities($_POST["etiquette"]);
-                            $description    = HtmlEntities($_POST["description"]);
-                            $adresse        = HtmlEntities($_POST["adresse"]);
+                            $nom            = $_POST["nom"];
+                            $etiquette      = $_POST["etiquette"];
+                            $description    = $_POST["description"];
+                            $adresse        = $_POST["adresse"];
 
                             // Exécution de la requête
                             $query = '  INSERT INTO favori (nom, etiquette, descript, adresse_url, id_cat, id_ss_cat, id_type)

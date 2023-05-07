@@ -6,12 +6,12 @@ CREATE TABLE favori
     nom VARCHAR(150) NOT NULL,
     etiquette VARCHAR(150),
     descript VARCHAR(500),
-    adresse_url VARCHAR(2000)    
+    adresse_url VARCHAR(2000) NOT NULL; 
 )
 ;
 
 ALTER TABLE favori
-ALTER COLUMN adresse_url VARCHAR(2000) NOT NULL; -- Ne fonctionne pas
+ALTER COLUMN adresse_url VARCHAR(2000) 
 
 CREATE TABLE categorie (
     id_cat INT AUTO_INCREMENT PRIMARY KEY NOT NULL,
@@ -41,7 +41,6 @@ CREATE TABLE categorie_ss_categorie (
 
 ALTER TABLE favori
 ADD id_cat INT NULL;
-
 ALTER TABLE favori 
 ADD FOREIGN KEY (id_cat) REFERENCES categorie (id_cat)
 ON DELETE RESTRICT ON UPDATE CASCADE;
@@ -54,12 +53,12 @@ ON DELETE RESTRICT ON UPDATE CASCADE;
 
 ALTER TABLE favori
 ADD id_type INT NULL;
-
 ALTER TABLE favori 
 ADD FOREIGN KEY (id_type) REFERENCES type_favori (id_type)
 ON DELETE RESTRICT ON UPDATE CASCADE;
 
-// Insertion des valeurs
+
+/* Insertion des valeurs */
 
 INSERT INTO categorie (categorie)
  VALUES

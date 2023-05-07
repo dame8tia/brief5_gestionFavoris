@@ -1,7 +1,8 @@
 <?php
 
     function get(string $table, pdo $db, int $identificateur=null):array {
-        $db =$db ;
+
+        $db = $db ;
 
         // préparation de la requête si connexion
         if (isset($db)){
@@ -12,7 +13,7 @@
             $data = null ;
             $query = "";
             $table = $table ;
-            $identificateur = $identificateur;
+            $identificateur = $identificateur; // pour la condition WHERE, s'il y a lieu
 
             if (isset($identificateur)){
                 $withIdentif = true ;
@@ -27,7 +28,6 @@
             switch ($fileEmit)
             {   
                 case "index.php" :
-
                     switch($table){
                         case "favori" :
                             // affiche les favoris : LEFT OUTER JOIN pour les favoris sans catégorie
@@ -42,14 +42,10 @@
                             ON t1.id_type = t4.id_type ;
                             ORDER BY t1.id DESC';
                             break;
-
                         default :
                             echo "Nom de la table ne match avec aucun cas connu - appel depuis index.php";
                     }
                     break;
-                    
-
-
                 case "form_edit.php" || "form_create.php" :
                     switch($table){
                         case "favori" :
@@ -77,8 +73,7 @@
                             break;
                         
                         case "categorie_ss_categorie" :
-                            switch ($withIdentif){
-                                
+                            switch ($withIdentif){                                
                                 case False :
                                     $query = "SELECT * FROM categorie_ss_categorie ;";
                                     break ;
@@ -104,17 +99,13 @@
                     echo "Fichier émetteur non reconnu ".$fileEmit ;
             } ;
 
-
             // Traitement de la requete
             if (isset($query)){
-                $db = $db ;
                 $query = $db->prepare($query);
                 $query->execute();
                 $data = $query->fetchAll();
             }
-            else {
-                echo "Requête vide";
-            }
+            else { echo "Requête vide"; }
 
             return $data;
 

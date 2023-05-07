@@ -124,70 +124,65 @@
         ?>
 
         <form method="post">
-
             <!-- Traitement en AJAX pour connaitre la catégorie sélectionnée pour filtrer correctement les sous catégories -->
             <input type="hidden" name="id" value ="<?= $id_fav_selected;?>">
+
             <div class="row mb-3">
                 <label class="col-sm-3 col-form-label">Nom</label>
                 <div class="col-sm-6">
                     <input type="text" class="form-control" name="nom" value="<?= $nom;?>" required>
                 </div>
             </div>
-
             <div class="row mb-3">
                 <label class="col-sm-3 col-form-label">Description</label>
                 <div class="col-sm-6">
                     <input type="text" class="form-control" name="description" value="<?= $description;?>">
                 </div>
             </div>
-
             <div class="row mb-3">
                 <label class="col-sm-3 col-form-label">Etiquette</label>
                 <div class="col-sm-6">
                     <input type="text" class="form-control" name="etiquette" value="<?= $etiquette;?>">
                 </div>
             </div>
-
             <div class="row mb-3">
                 <label class="col-sm-3 col-form-label">Adresse</label>
                 <div class="col-sm-6">
                     <input type="url" class="form-control" name="adresse" value="<?= $adresse;?>" required>
                 </div>
             </div>
-
             <div class="row mb-3">
                 <label class="col-sm-3 col-form-label">Nature du favori</label>
                 <div class="col-sm-6">
                     <select name="type_favori">
                         <option value=0>Sélectionner un type</option>
                         <?php
-                        // On affiche chaque catégorie une à une dans la liste déroulante (option)
-                        foreach ($list_type as $ligne) {
-                        echo '<option value="'.$ligne["id_type"].'"';
-                        if ($ligne["type_favori"]==$type_favori_fav){
-                            echo " selected";
-                        }
-                        echo ">".$ligne["type_favori"]."</option>";
-                        }
+                            // On affiche chaque catégorie une à une dans la liste déroulante (option)
+                            foreach ($list_type as $ligne) {
+                                echo '<option value="'.$ligne["id_type"].'"';
+                                if ($ligne["type_favori"]==$type_favori_fav) {
+                                    echo " selected";
+                                }
+                                echo ">".$ligne["type_favori"]."</option>";
+                            }
                         ?>
                     </select>
                 </div>
             </div>
-
             <div class="row mb-3">
                 <label class="col-sm-3 col-form-label">Categorie</label>
                 <div class="col-sm-6">
                     <select name="categorie" id="form_id_cat" class="linked-select" data-target = "form_id_ss_cat" data-source = "../model/list_ss_cat.php?type=ss_categorie&filter=$id">
                         <option value=0>Sélectionner une catégorie</option>
                         <?php
-                        // On affiche chaque catégorie une à une dans la liste déroulante (option)
-                        foreach ($list_categorie as $ligne) {
-                        echo '<option value="'.$ligne["id_cat"].'"';
-                        if ($ligne["categorie"]==$categorie_fav){
-                            echo " selected";
-                        }
-                        echo ">".$ligne["categorie"]."</option>";
-                        }
+                            // On affiche chaque catégorie une à une dans la liste déroulante (option)
+                            foreach ($list_categorie as $ligne) {
+                            echo '<option value="'.$ligne["id_cat"].'"';
+                            if ($ligne["categorie"]==$categorie_fav){
+                                echo " selected";
+                            }
+                            echo ">".$ligne["categorie"]."</option>";
+                            }
                         ?>
                     </select>
                 </div>
@@ -207,27 +202,24 @@
                         }
                         echo ">".$ligne["ss_categorie"]."</option>";
                         }
-                        ?>
-
+                    ?>
                     </select>
-                </div>
-            </div>
                 </div>
             </div>
 
             <?php 
-            if (!empty($succesMessage)){
-                echo "
-                <div class='row mb-3'>
-                    <div class='offset-sm-3 col-sm-6'>
-                        <div class='alert alert-success alert-dismissible fade show' role='alert'>
-                            <strong>$succesMessage</strong>
-                            <button type='button' class ='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
+                if (!empty($succesMessage)){
+                    echo "
+                    <div class='row mb-3'>
+                        <div class='offset-sm-3 col-sm-6'>
+                            <div class='alert alert-success alert-dismissible fade show' role='alert'>
+                                <strong>$succesMessage</strong>
+                                <button type='button' class ='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
+                            </div>
                         </div>
                     </div>
-                </div>
-                ";
-            }
+                    ";
+                }
             ?>
 
             <div class="row mb-3">
